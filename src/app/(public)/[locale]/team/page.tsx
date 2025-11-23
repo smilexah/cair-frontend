@@ -1,9 +1,8 @@
-import { use } from "react";
 import { setRequestLocale } from "next-intl/server";
 import { Locale } from "use-intl";
 import { Container } from "@/shared/components/Container";
-import { teamMembers } from "@/data/team";
-import { useTranslations } from "next-intl";
+import { getTeamMembers } from "@/data/team";
+import { getTranslations } from "next-intl/server";
 import type { Metadata } from "next";
 
 export async function generateMetadata({
@@ -40,8 +39,9 @@ export async function generateMetadata({
     };
 }
 
-function TeamPageContent() {
-    const t = useTranslations("team");
+async function TeamPageContent({ locale }: { locale: string }) {
+    const t = await getTranslations("team");
+    const teamMembers = await getTeamMembers();
 
     return (
         <Container>
@@ -60,11 +60,23 @@ function TeamPageContent() {
                             className="bg-card border border-border rounded-2xl p-6 hover:shadow-lg transition-all duration-300 hover:scale-[1.02]"
                         >
                             <div className="flex flex-col items-center text-center mb-4">
-                                <div className="w-32 h-32 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center mb-4">
-                                    <span className="text-4xl font-bold text-primary">
-                                        {member.name.split(' ').map(n => n[0]).join('')}
-                                    </span>
-                                </div>
+                                {member.image ? (
+                                    <div className="w-32 h-32 rounded-full overflow-hidden mb-4">
+                                        <img
+                                            src={member.image}
+                                            alt={member.name}
+                                            className="w-full h-full object-cover"
+                                        />
+                                    </div>
+                                ) : (
+                                    <div className="w-32 h-32 rounded-full overflow-hidden mb-4 bg-gray-100 flex items-center justify-center">
+                                        <img
+                                            src="/default-person.svg"
+                                            alt={member.name}
+                                            className="w-full h-full object-cover"
+                                        />
+                                    </div>
+                                )}
                                 <h2 className="text-xl font-bold text-foreground mb-1">
                                     {member.name}
                                 </h2>
@@ -115,10 +127,10 @@ function TeamPageContent() {
     );
 }
 
-export default function TeamPage({ params }: PageProps<'/[locale]/team'>) {
-    const { locale } = use(params);
+export default async function TeamPage({ params }: PageProps<'/[locale]/team'>) {
+    const { locale } = await params;
     setRequestLocale(locale as Locale);
 
-    return <TeamPageContent />;
+    return <TeamPageContent locale={locale} />;
 }
 

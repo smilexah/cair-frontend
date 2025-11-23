@@ -1,14 +1,14 @@
-import { use } from "react";
 import { setRequestLocale } from "next-intl/server";
 import { Locale } from "use-intl";
 import { Container } from "@/shared/components/Container";
-import { projects } from "@/data/projects";
+import { getProjects, getProjectBySlug } from "@/data/projects";
 import { notFound } from "next/navigation";
 import { Link } from "@/shared/lib/i18n/navigation";
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import type { Metadata } from "next";
 
 export async function generateStaticParams() {
+    const projects = await getProjects();
     return projects.flatMap(project =>
         ['en', 'ru', 'kz'].map(locale => ({
             locale,
@@ -21,7 +21,7 @@ export async function generateMetadata({
     params
 }: PageProps<'/[locale]/projects/[slug]'>): Promise<Metadata> {
     const { locale, slug } = await params;
-    const project = projects.find(p => p.slug === slug);
+    const project = await getProjectBySlug(slug);
 
     if (!project) {
         return {};
@@ -53,9 +53,9 @@ export async function generateMetadata({
     };
 }
 
-function ProjectDetailContent({ slug, locale }: { slug: string; locale: string }) {
-    const t = useTranslations("projectDetail");
-    const project = projects.find(p => p.slug === slug);
+async function ProjectDetailContent({ slug, locale }: { slug: string; locale: string }) {
+    const t = await getTranslations("projectDetail");
+    const project = await getProjectBySlug(slug);
 
     if (!project) {
         notFound();
@@ -76,7 +76,7 @@ function ProjectDetailContent({ slug, locale }: { slug: string; locale: string }
                 <div className="mb-12">
                     <div className="flex items-center justify-center mb-8 h-40 bg-card border border-border rounded-2xl p-8">
                         <img
-                            src={project.image}
+                            src={project.image || '/projects/KZH.svg'}
                             alt={project.title[localeKey]}
                             className="max-h-full object-contain"
                         />
@@ -196,8 +196,8 @@ function ProjectDetailContent({ slug, locale }: { slug: string; locale: string }
     );
 }
 
-export default function ProjectDetailPage({ params }: PageProps<'/[locale]/projects/[slug]'>) {
-    const { locale, slug } = use(params);
+export default async function ProjectDetailPage({ params }: PageProps<'/[locale]/projects/[slug]'>) {
+    const { locale, slug } = await params;
     setRequestLocale(locale as Locale);
 
     return <ProjectDetailContent slug={slug} locale={locale} />;

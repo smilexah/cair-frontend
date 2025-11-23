@@ -3,8 +3,13 @@ import {Container} from "@/shared/components/Container";
 import {ProjectsCarousel} from "@/modules/landing/components/our-projects/ui/ProjectsCarousel";
 import {useTranslations} from "next-intl";
 import {motion} from "framer-motion";
+import type { Project } from "@/data/projects";
 
-export const OurProjectsSection = () => {
+interface OurProjectsSectionProps {
+    projects: Project[];
+}
+
+export const OurProjectsSection = ({ projects }: OurProjectsSectionProps) => {
 
     const t = useTranslations("landing.ourProjects");
 
@@ -28,7 +33,7 @@ export const OurProjectsSection = () => {
                 transition={{ duration: 0.7, delay: 0.3, ease: "easeOut" }}
                 whileInView={{ opacity: 1, y: 0 }}
             >
-                <ProjectsCarousel />
+                <ProjectsCarousel projects={projects} />
             </motion.div>
         </section>
     )

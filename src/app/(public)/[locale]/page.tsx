@@ -6,10 +6,10 @@ import {PreviouslyWorkedSection} from "@/modules/landing/components/team-worked-
 import {WhoWeAreSection} from "@/modules/landing/components/who-we-are/WhoWeAreSection";
 import {OurPartnersSection} from "@/modules/landing/components/our-partners/OurPartnersSection";
 import {JoinUsSection} from "@/modules/landing/components/join-us/JoinUsSection";
-import {use} from "react";
 import {setRequestLocale} from "next-intl/server";
 import {Locale} from "use-intl";
 import type { Metadata } from "next";
+import { getProjects } from "@/data/projects";
 
 
 export async function generateMetadata({
@@ -41,15 +41,17 @@ export async function generateMetadata({
     };
 }
 
-export default function Home({params}: PageProps<'/[locale]'>) {
-    const {locale} = use(params);
+export default async function Home({params}: PageProps<'/[locale]'>) {
+    const {locale} = await params;
 
     setRequestLocale(locale as Locale);
+
+    const projects = await getProjects();
 
     return (
         <>
             <MainBannerSection />
-            <OurProjectsSection />
+            <OurProjectsSection projects={projects} />
             <TimeLineSection />
             <WhatWeDoSection />
             <PreviouslyWorkedSection />

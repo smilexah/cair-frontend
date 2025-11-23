@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
-import { projects } from '@/data/projects';
+import { getProjects } from '@/data/projects';
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
     const locales = ['en', 'ru', 'kz'];
 
@@ -21,6 +21,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
             priority: page === '' ? 1 : 0.8,
         }))
     );
+
+    // Get projects from API
+    const projects = await getProjects();
 
     // Generate URLs for all project detail pages
     const projectUrls = projects.flatMap(project =>

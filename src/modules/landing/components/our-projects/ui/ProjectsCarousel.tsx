@@ -3,10 +3,14 @@ import { useEffect, useState } from "react";
 import { Carousel, CarouselContent, CarouselItem } from "@/shared/ui/carousel";
 import { ProjectItem } from "@/modules/landing/components/our-projects/ui/ProjectItem";
 import Autoscroll from "embla-carousel-auto-scroll";
-import { projects } from "@/data/projects";
+import type { Project } from "@/data/projects";
 import { useLocale } from "next-intl";
 
-export const ProjectsCarousel = () => {
+interface ProjectsCarouselProps {
+    projects: Project[];
+}
+
+export const ProjectsCarousel = ({ projects }: ProjectsCarouselProps) => {
     const [speed, setSpeed] = useState(2);
     const locale = useLocale() as 'en' | 'ru' | 'kz';
 

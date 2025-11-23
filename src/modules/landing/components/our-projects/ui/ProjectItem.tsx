@@ -32,18 +32,16 @@ export const ProjectItem = ({
         [transition:max-height_350ms_ease]
       `}
         >
-            {imageSRC && (
-                <div className="flex justify-end mb-6">
-                    <Image
-                        width={50}
-                        height={50}
-                        src={imageSRC}
-                        alt="project-image"
-                        className="object-cover"
-                        loading="lazy"
-                    />
-                </div>
-            )}
+            <div className="flex justify-end mb-6">
+                <Image
+                    width={50}
+                    height={50}
+                    src={imageSRC || '/projects/KZH.svg'}
+                    alt="project-image"
+                    className="object-cover"
+                    loading="lazy"
+                />
+            </div>
 
             <div className="space-y-2">
                 <h3 className="text-2xl font-bold leading-tight">{title}</h3>

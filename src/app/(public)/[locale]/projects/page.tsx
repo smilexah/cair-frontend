@@ -1,10 +1,9 @@
-import { use } from "react";
 import { setRequestLocale } from "next-intl/server";
 import { Locale } from "use-intl";
 import { Container } from "@/shared/components/Container";
-import { projects } from "@/data/projects";
+import { getProjects } from "@/data/projects";
 import { Link } from "@/shared/lib/i18n/navigation";
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import type { Metadata } from "next";
 
 export async function generateMetadata({
@@ -41,8 +40,9 @@ export async function generateMetadata({
     };
 }
 
-function ProjectsPageContent() {
-    const t = useTranslations("projects");
+async function ProjectsPageContent({ locale }: { locale: string }) {
+    const t = await getTranslations("projects");
+    const projects = await getProjects();
 
     return (
         <Container>
@@ -64,7 +64,7 @@ function ProjectsPageContent() {
                             <div className="bg-card border border-border rounded-2xl p-6 hover:shadow-lg transition-all duration-300 hover:scale-[1.02] h-full">
                                 <div className="flex items-center justify-center mb-4 h-32">
                                     <img
-                                        src={project.image}
+                                        src={project.image || '/projects/KZH.svg'}
                                         alt={project.title.en}
                                         className="max-h-full object-contain"
                                     />
@@ -108,10 +108,10 @@ function ProjectsPageContent() {
     );
 }
 
-export default function ProjectsPage({ params }: PageProps<'/[locale]/projects'>) {
-    const { locale } = use(params);
+export default async function ProjectsPage({ params }: PageProps<'/[locale]/projects'>) {
+    const { locale } = await params;
     setRequestLocale(locale as Locale);
 
-    return <ProjectsPageContent />;
+    return <ProjectsPageContent locale={locale} />;
 }
 

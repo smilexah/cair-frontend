@@ -31,7 +31,7 @@ export const Header = () => {
                         <Image
                             width={104}
                             height={34}
-                            src={"Logo.svg"}
+                            src={"/Logo.svg"}
                             alt={"logo"}
                             className="max-[512px]:w-[100px] transition-transform duration-300"
                         />
