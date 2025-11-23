@@ -1,0 +1,19 @@
+export const Shape1 = (props: React.SVGProps<SVGSVGElement>) => {
+    return (
+        <svg
+            viewBox="0 0 1064 352"
+            xmlns="http://www.w3.org/2000/svg"
+            className="w-full h-[352px]  max-[768px]:h-[300px] max-[512px]:h-[320px]" // ширина 100%
+            preserveAspectRatio="none"
+            {...props}
+        >
+            <path
+                d="M1063 247.5V27.5C1063.23 10.2016 1056.69 3.28095 1040.5 1H33H27C7.62908 2.06844 1.06575 9.03552 1 26V229.5V250.5C2.3905 265.795 10.329 271.224 21 273L526 350L533 351H534H535L542 350L1038.5 274.5C1055.95 272.157 1062.72 267.717 1063 247.5Z"
+                fill="#4A7EBB"
+                fillOpacity="0.5"
+                stroke="#4A7EBB"
+                strokeWidth="2"
+            />
+        </svg>
+    );
+}
