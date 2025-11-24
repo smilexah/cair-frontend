@@ -10,7 +10,7 @@ import type { Metadata } from "next";
 export async function generateStaticParams() {
     const projects = await getProjects();
     return projects.flatMap(project =>
-        ['en', 'ru', 'kk'].map(locale => ({
+        ['en', 'ru', 'kz'].map(locale => ({
             locale,
             slug: project.slug
         }))
