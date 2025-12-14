@@ -1,4 +1,4 @@
-import { projectsApi, type ProjectDTO } from '@/lib/api/client';
+import { projectsService, type ProjectDTO } from '@/lib/api';
 
 export interface Project {
   id: string;
@@ -69,10 +69,8 @@ function mapDTOToProject(dto: ProjectDTO): Project {
  * Get all projects from API
  */
 export async function getProjects(): Promise<Project[]> {
-  console.log('[Projects] Fetching all projects from API...');
   try {
-    const response = await projectsApi.getAll({ size: 100, sortBy: 'startDate', direction: 'DESC' });
-    console.log('[Projects] Received projects:', response.content.length);
+    const response = await projectsService.getAll({ size: 100, sortBy: 'startDate', direction: 'DESC' });
     return response.content.map(mapDTOToProject);
   } catch (error) {
     console.error('[Projects] Failed to fetch projects:', error);
@@ -84,10 +82,8 @@ export async function getProjects(): Promise<Project[]> {
  * Get project by slug
  */
 export async function getProjectBySlug(slug: string): Promise<Project | null> {
-  console.log('[Projects] Fetching project by slug:', slug);
   try {
-    const dto = await projectsApi.getBySlug(slug);
-    console.log('[Projects] Received project:', dto.title.en);
+    const dto = await projectsService.getBySlug(slug);
     return mapDTOToProject(dto);
   } catch (error) {
     console.error(`[Projects] Failed to fetch project with slug ${slug}:`, error);

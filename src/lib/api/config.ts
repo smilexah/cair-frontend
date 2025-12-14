@@ -1,17 +1,23 @@
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api';
+import axios from 'axios';
 
-// Skip API calls during build if backend is not available
-export const SKIP_API_CALLS = process.env.SKIP_API_CALLS === 'true';
+export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || process.env.API_BASE_URL || 'https://cair-backend-production.up.railway.app/api';
 
-console.log('[API Config] API_BASE_URL:', API_BASE_URL);
-console.log('[API Config] NEXT_PUBLIC_API_URL:', process.env.NEXT_PUBLIC_API_URL);
-console.log('[API Config] SKIP_API_CALLS:', SKIP_API_CALLS);
+export const axiosInstance = axios.create({
+  baseURL: API_BASE_URL,
+  timeout: 30000,
+  headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  },
+});
 
-export const API_ENDPOINTS = {
-  TEAM_MEMBERS: '/team-members',
-  PROJECTS: '/projects',
-  PROJECT_BY_SLUG: (slug: string) => `/projects/slug/${slug}`,
-  PROJECT_BY_ID: (id: number) => `/projects/${id}`,
-  TEAM_MEMBER_BY_ID: (id: number) => `/team-members/${id}`,
-} as const;
+axiosInstance.interceptors.request.use(
+  (config) => config,
+  (error) => Promise.reject(error)
+);
+
+axiosInstance.interceptors.response.use(
+  (response) => response,
+  (error) => Promise.reject(error)
+);
 

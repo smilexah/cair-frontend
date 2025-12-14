@@ -1,4 +1,4 @@
-import { teamMembersApi, type TeamMemberDTO } from '@/lib/api/client';
+import { teamService, type TeamMemberDTO } from '@/lib/api';
 
 export interface TeamMember {
   id: string;
@@ -43,10 +43,8 @@ function mapDTOToTeamMember(dto: TeamMemberDTO): TeamMember {
  * Get all team members from API
  */
 export async function getTeamMembers(): Promise<TeamMember[]> {
-  console.log('[Team] Fetching all team members from API...');
   try {
-    const response = await teamMembersApi.getAll({ size: 100, sortBy: 'id', direction: 'ASC' });
-    console.log('[Team] Received team members:', response.content.length);
+    const response = await teamService.getAll({ size: 100, sortBy: 'id', direction: 'ASC' });
     return response.content.map(mapDTOToTeamMember);
   } catch (error) {
     console.error('[Team] Failed to fetch team members:', error);
@@ -59,7 +57,7 @@ export async function getTeamMembers(): Promise<TeamMember[]> {
  */
 export async function getTeamMemberById(id: number): Promise<TeamMember | null> {
   try {
-    const dto = await teamMembersApi.getById(id);
+    const dto = await teamService.getById(id);
     return mapDTOToTeamMember(dto);
   } catch (error) {
     console.error(`Failed to fetch team member with id ${id}:`, error);
