@@ -1,27 +1,36 @@
 import { setRequestLocale } from "next-intl/server";
 import { Locale } from "use-intl";
 import { Container } from "@/shared/components/Container";
-import { getProjects, getProjectBySlug } from "@/data/projects";
+import { projectsService } from "@/lib/api";
 import { notFound } from "next/navigation";
 import { Link } from "@/shared/lib/i18n/navigation";
 import { getTranslations } from "next-intl/server";
 import type { Metadata } from "next";
 
+export const dynamicParams = true;
+
 export async function generateStaticParams() {
-    const projects = await getProjects();
-    return projects.flatMap(project =>
-        ['en', 'ru', 'kz'].map(locale => ({
-            locale,
-            slug: project.slug
-        }))
-    );
+    try {
+        const projects = await projectsService.getAll({ size: 100, sortBy: 'startDate', direction: 'DESC' });
+        if (projects.length === 0) {
+            return [];
+        }
+        return projects.flatMap(project =>
+            ['en', 'ru', 'kz'].map(locale => ({
+                locale,
+                slug: project.slug
+            }))
+        );
+    } catch {
+        return [];
+    }
 }
 
 export async function generateMetadata({
     params
 }: PageProps<'/[locale]/projects/[slug]'>): Promise<Metadata> {
     const { locale, slug } = await params;
-    const project = await getProjectBySlug(slug);
+    const project = await projectsService.getBySlug(slug);
 
     if (!project) {
         return {};
@@ -55,7 +64,7 @@ export async function generateMetadata({
 
 async function ProjectDetailContent({ slug, locale }: { slug: string; locale: string }) {
     const t = await getTranslations("projectDetail");
-    const project = await getProjectBySlug(slug);
+    const project = await projectsService.getBySlug(slug);
 
     if (!project) {
         notFound();
@@ -134,7 +143,7 @@ async function ProjectDetailContent({ slug, locale }: { slug: string; locale: st
                                 {t('objectives')}
                             </h2>
                             <ul className="space-y-3">
-                                {project.objectives[localeKey].map((objective, index) => (
+                                {(project.objectives[localeKey] as unknown as string[] || []).map((objective, index) => (
                                     <li key={index} className="flex items-start gap-3">
                                         <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center text-sm font-medium mt-0.5">
                                             {index + 1}
@@ -151,7 +160,7 @@ async function ProjectDetailContent({ slug, locale }: { slug: string; locale: st
                                     {t('results')}
                                 </h2>
                                 <ul className="space-y-3">
-                                    {project.results[localeKey].map((result, index) => (
+                                    {(project.results[localeKey] as unknown as string[] || []).map((result, index) => (
                                         <li key={index} className="flex items-start gap-3">
                                             <span className="flex-shrink-0 text-green-500 text-xl">
                                                 ✓

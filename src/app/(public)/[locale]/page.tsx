@@ -9,7 +9,7 @@ import {JoinUsSection} from "@/modules/landing/components/join-us/JoinUsSection"
 import {setRequestLocale} from "next-intl/server";
 import {Locale} from "use-intl";
 import type { Metadata } from "next";
-import { getProjects } from "@/data/projects";
+import { projectsService } from "@/lib/api";
 
 
 export async function generateMetadata({
@@ -46,7 +46,7 @@ export default async function Home({params}: PageProps<'/[locale]'>) {
 
     setRequestLocale(locale as Locale);
 
-    const projects = await getProjects();
+    const projects = await projectsService.getAll({ size: 100, sortBy: 'startDate', direction: 'DESC' });
 
     return (
         <>

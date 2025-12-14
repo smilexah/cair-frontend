@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next';
-import { getProjects } from '@/data/projects';
+import { projectsService } from '@/lib/api';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
@@ -23,7 +23,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     );
 
     // Get projects from API
-    const projects = await getProjects();
+    const projects = await projectsService.getAll({ size: 100, sortBy: 'startDate', direction: 'DESC' });
 
     // Generate URLs for all project detail pages
     const projectUrls = projects.flatMap(project =>

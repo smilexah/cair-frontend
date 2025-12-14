@@ -1,7 +1,7 @@
 import { setRequestLocale } from "next-intl/server";
 import { Locale } from "use-intl";
 import { Container } from "@/shared/components/Container";
-import { getTeamMembers } from "@/data/team";
+import { teamService } from "@/lib/api";
 import { getTranslations } from "next-intl/server";
 import type { Metadata } from "next";
 
@@ -41,7 +41,7 @@ export async function generateMetadata({
 
 async function TeamPageContent({ locale }: { locale: string }) {
     const t = await getTranslations("team");
-    const teamMembers = await getTeamMembers();
+    const teamMembers = await teamService.getAll({ size: 100, sortBy: 'id', direction: 'ASC' });
 
     return (
         <Container>

@@ -3,11 +3,11 @@ import { useEffect, useState } from "react";
 import { Carousel, CarouselContent, CarouselItem } from "@/shared/ui/carousel";
 import { ProjectItem } from "@/modules/landing/components/our-projects/ui/ProjectItem";
 import Autoscroll from "embla-carousel-auto-scroll";
-import type { Project } from "@/data/projects";
+import type { ProjectDTO } from "@/lib/api";
 import { useLocale } from "next-intl";
 
 interface ProjectsCarouselProps {
-    projects: Project[];
+    projects: ProjectDTO[];
 }
 
 export const ProjectsCarousel = ({ projects }: ProjectsCarouselProps) => {

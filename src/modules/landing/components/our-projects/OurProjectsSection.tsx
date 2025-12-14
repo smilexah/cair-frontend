@@ -3,10 +3,10 @@ import {Container} from "@/shared/components/Container";
 import {ProjectsCarousel} from "@/modules/landing/components/our-projects/ui/ProjectsCarousel";
 import {useTranslations} from "next-intl";
 import {motion} from "framer-motion";
-import type { Project } from "@/data/projects";
+import type { ProjectDTO } from "@/lib/api";
 
 interface OurProjectsSectionProps {
-    projects: Project[];
+    projects: ProjectDTO[];
 }
 
 export const OurProjectsSection = ({ projects }: OurProjectsSectionProps) => {

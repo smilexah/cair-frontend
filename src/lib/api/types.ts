@@ -52,4 +52,3 @@ export interface ProjectDTO {
   createdAt: string;
   updatedAt: string;
 }
-

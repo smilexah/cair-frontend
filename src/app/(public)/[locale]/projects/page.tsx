@@ -1,7 +1,7 @@
 import { setRequestLocale } from "next-intl/server";
 import { Locale } from "use-intl";
 import { Container } from "@/shared/components/Container";
-import { getProjects } from "@/data/projects";
+import { projectsService } from "@/lib/api";
 import { Link } from "@/shared/lib/i18n/navigation";
 import { getTranslations } from "next-intl/server";
 import type { Metadata } from "next";
@@ -42,7 +42,7 @@ export async function generateMetadata({
 
 async function ProjectsPageContent({ locale }: { locale: string }) {
     const t = await getTranslations("projects");
-    const projects = await getProjects();
+    const projects = await projectsService.getAll({ size: 100, sortBy: 'startDate', direction: 'DESC' });
 
     return (
         <Container>
